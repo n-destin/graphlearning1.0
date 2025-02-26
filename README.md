@@ -1,6 +1,6 @@
-# Graph Deep Learning Course Code Repository
+# Deep Learning on Graphs Code Repository
 
-This repository provides implementations course materials that cover everything you need to know about Graph Deep Learning. 
+This repository provides implementations of the most influential papers in Deep Learning on Graphs. 
 
 ## Repository Structure
 
@@ -8,5 +8,6 @@ This repository provides implementations course materials that cover everything 
 graph-learning-course/
 ├── topic
     |── Implementation
-    |── Readme Explaining Implementaed papers. 
-    |── Suggestions are highly welcome 
+    |── Readme Explaining Implemented papers.
+```
+Suggestions are highly welcome 
