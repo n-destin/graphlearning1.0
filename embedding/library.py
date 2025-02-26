@@ -41,7 +41,7 @@ class Graph():
     
     def create_graph(self,):
 
-        current = list()
+        current = set()
         for edge in self.edges:
             if len(edge) == 2:
                 node1, node2 = edge
@@ -50,22 +50,22 @@ class Graph():
                 node1, node2, weight = edge
             self.mapping[node1][node2] = weight
             self.mapping[node2][node1] = weight
-            self.node_embeddings = torch.rand(self.embdding_dimension, requires_grad=True)
-            self.node_embeddings.add(node1)
-            self.nodes.add(node2)
+            self.node_embeddings[node1] = torch.rand(self.embdding_dimension, requires_grad=True)
+            self.node_embeddings[node2] = torch.rand(self.embdding_dimension, requires_grad=True)
             treenode1 = HuffmanTreeNode(node1)
             treenode2 = HuffmanTreeNode(node2)
             self.node_treenode[node1] = treenode1
             self.node_treenode[node2] = treenode2
-            current.append(treenode1)
-            current.append(treenode2)
-
+            current.add(treenode1)
+            current.add(treenode2)
+        current = list(current)
          # construct the huffman tree for Hierarchical Softmax
-        if len(current) % 2 == 1:
-            current.append(HuffmanTreeNode(None))
-
-        while len(current) > 0:
+        
+        while len(current) > 1:
+            if len(current) % 2 == 1:
+                current.append(HuffmanTreeNode(None))
             index = 0
+            new_current = list()
             while index < len(current):
                 node1 = current[index]
                 node2 = current[index + 1]
@@ -75,6 +75,8 @@ class Graph():
                 node1.parent = treenode
                 node2.parent = treenode
                 index += 2
+                new_current.append(treenode)
+            current = new_current
 
         self.HuffmanTree = current[0]
     
@@ -129,4 +131,7 @@ class Graph():
                 probability = math.log(torch.matmul(self.node_embeddings[context], self.node_embeddings[walk[index]])) / normalizig_term
                 probability.backwards()
                 self.node_embeddings[node] -= learning_rate * self.node_embeddings.grad()
-        
+    
+
+
+graph = Graph(graph_test_one, 200)
