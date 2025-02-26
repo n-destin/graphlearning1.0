@@ -1,4 +1,4 @@
-# Graph Deep Learning Course Code Repository
+# Deep Learning on Graphs Course Code Repository
 
 This repository provides implementations course materials that cover everything you need to know about Graph Deep Learning. 
 
