@@ -1,6 +1,6 @@
 Given a network G = (V, E) (which can be directed/undirected or weighted/unweighted), our goal is to learn a mapping function:
 
-   f -> R^d
+    f : V -> ℝ^d
 
 that assigns each node a d-dimensional feature representation. Equivalently, f is a |V| x d matrix.
 
