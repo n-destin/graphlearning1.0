@@ -13,7 +13,14 @@ def sigmoid(number):
     return 1/(1+math.exp(number))
 
 def softmax(list):
-    return [element / sum(list) for element in list]
+    return [element / sum(list) for element in list]\
+
+class HuffmanTreeNode():
+    def __init__(self, value):
+        self.value = value
+        self.parent = None
+        self.right = None
+        self.left  = None
 
 class Graph():
     def __init__(self, edges, embedding_dimension):
@@ -24,11 +31,17 @@ class Graph():
         self.mapping = defaultdict(lambda: defaultdict(int))
         self.return_parameter = None
         self.in_out_parameter = None
+        self.HuffmanTree = None
+        self.node_treenode = defaultdict()
+        
+        self.create_graph()
 
     def test_graph(self, ):
         pass
     
     def create_graph(self,):
+
+        current = list()
         for edge in self.edges:
             if len(edge) == 2:
                 node1, node2 = edge
@@ -40,6 +53,30 @@ class Graph():
             self.node_embeddings = torch.rand(self.embdding_dimension, requires_grad=True)
             self.node_embeddings.add(node1)
             self.nodes.add(node2)
+            treenode1 = HuffmanTreeNode(node1)
+            treenode2 = HuffmanTreeNode(node2)
+            self.node_treenode[node1] = treenode1
+            self.node_treenode[node2] = treenode2
+            current.append(treenode1)
+            current.append(treenode2)
+
+         # construct the huffman tree for Hierarchical Softmax
+        if len(current) % 2 == 1:
+            current.append(HuffmanTreeNode(None))
+
+        while len(current) > 0:
+            index = 0
+            while index < len(current):
+                node1 = current[index]
+                node2 = current[index + 1]
+                treenode = HuffmanTreeNode(str(index) + str(len(current)))
+                treenode.right = node1
+                treenode.left = node2
+                node1.parent = treenode
+                node2.parent = treenode
+                index += 2
+
+        self.HuffmanTree = current[0]
     
     def traverse(self, node, count, choosing):
             if count == 0:
