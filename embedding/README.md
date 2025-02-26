@@ -1,5 +1,3 @@
-# Node Feature Representation Learning
-
 Given a network \( G = (V, E) \) (which can be directed/undirected or weighted/unweighted), our goal is to learn a mapping function
 
 \[
