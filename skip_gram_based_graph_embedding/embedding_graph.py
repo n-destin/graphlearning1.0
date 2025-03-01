@@ -1,4 +1,4 @@
-from embedding.library import Graph
+from skip_gram_based_graph_embedding.library import Graph
 from testing_graphs import graph_test_one
 
 def graph_embedding(walks_per_node, walk_length, embedding_dimension, learning_rate, window_size, embedding_type):

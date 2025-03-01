@@ -16,4 +16,3 @@ class GraphSage(nn.Module):
         for layer in self.hidden_layers:
             support = layer(support)
         return support
-    
