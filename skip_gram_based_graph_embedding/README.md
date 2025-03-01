@@ -13,4 +13,4 @@ Papers:
 - Network Embedding as Matrix Factorization: Unifying DeepWalk, LINE, PTE, and node2vec: https://arxiv.org/pdf/1710.02971
 
 
-![alt text](../Deepwalk.png)
+![alt text](Deepwalk.png)
