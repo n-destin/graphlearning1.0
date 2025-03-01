@@ -35,35 +35,34 @@ class GATLayer(nn.Module):
   '''
   def __init__(self, in_features, out_features, dropout=0.6, alpha=0.2, num_heads=2, concat=True):
     super(GATLayer, self).__init__()
-    self.in_features = in_features ### dimension of input features/representations
-    self.out_features = out_features ### if concat=False, the dimension of output features/representations is self.out_features; otherwise, the dimension is self.out_features*num_heads
-    self.dropout = dropout ### setting dropout rate
-    self.alpha = alpha ### parameters for leaky_relu, check: https://pytorch.org/docs/stable/generated/torch.nn.LeakyReLU.html
+    self.in_features = in_features
+    self.out_features = out_features 
+    self.dropout = dropout 
+    self.alpha = alpha 
 
-    self.W = nn.Parameter(torch.FloatTensor(num_heads, in_features, out_features)) ### Each slice (W[i, :, :]) corresponds to the ith learnable matrix, responsible for transforming the node representations and generating attention scores for the ith attention head.
-    nn.init.xavier_uniform_(self.W.data, gain=1.414) ### using xavier initialization, check: https://pytorch.org/docs/stable/nn.init.html#torch.nn.init.xavier_uniform_
+    self.W = nn.Parameter(torch.FloatTensor(num_heads, in_features, out_features))
+    nn.init.xavier_uniform_(self.W.data, gain=1.414)
 
-    self.a = nn.Parameter(torch.FloatTensor(num_heads, 2*out_features, 1)) ### Each slice a[i, :, :]) corresponds to the vector to generate the attention scores for the ith attention head.
-    nn.init.xavier_uniform_(self.a.data, gain=1.414) ### xavier initialization
+    self.a = nn.Parameter(torch.FloatTensor(num_heads, 2*out_features, 1))
+    nn.init.xavier_uniform_(self.a.data, gain=1.414)
 
     self.leaky_relu = nn.LeakyReLU(self.alpha)
     self.dropout_layer = nn.Dropout(self.dropout)
 
-    self.num_heads = num_heads #### number of heads
+    self.num_heads = num_heads
 
-    self.concat = concat ### whether to concatenate the outputs from all attention heads, the other option is to average them
+    self.concat = concat
   def forward(self, x, adj):
         N = x.size(0)
-        # add self loop to the adjacency
         adj = adj + torch.eye(N, N)
         x_transformed = torch.bmm(torch.unsqueeze(x, 0).repeat(self.num_heads, 1, 1), self.W)
 
         f_repeat = x_transformed.repeat_interleave(N, dim=1)
         f_repeat_interleave = x_transformed.repeat(1, N, 1)
-        all_features = torch.cat([f_repeat, f_repeat_interleave], dim=-1) # Shape: (num_heads, N*N, 2*out_features)
+        all_features = torch.cat([f_repeat, f_repeat_interleave], dim=-1)
 
         attention_scores = self.leaky_relu(torch.matmul(all_features, self.a).squeeze(-1))
-        attention_scores = attention_scores.view(self.num_heads, N, N) # Reshape to (num_heads, N, N)
+        attention_scores = attention_scores.view(self.num_heads, N, N)
         zero_vec = -9e15*torch.ones_like(attention_scores)
 
         attention_scores = torch.where(adj > 0, attention_scores, zero_vec)
@@ -84,10 +83,10 @@ class GAT(nn.Module):
   """
   def __init__(self, nfeat, nhid, nclass, nlayers=2, dropout=0.6, alpha=0.2, num_heads=2):
     super(GAT, self).__init__()
-    self.dropout = dropout ### setting dropout rate
-    self.first = GATLayer(nfeat, nhid, dropout, alpha, num_heads, True) ## first attention layer
-    self.last = GATLayer(nhid*num_heads, nclass,dropout, alpha, num_heads, False) ## last attention layer
-    self.attentions = [GATLayer(nhid*num_heads, nhid, dropout, alpha, num_heads, True) for _ in range(nlayers-2)] ## other attention layers
+    self.dropout = dropout 
+    self.first = GATLayer(nfeat, nhid, dropout, alpha, num_heads, True)
+    self.last = GATLayer(nhid*num_heads, nclass,dropout, alpha, num_heads, False)
+    self.attentions = [GATLayer(nhid*num_heads, nhid, dropout, alpha, num_heads, True) for _ in range(nlayers-2)]
 
   def forward(self, x, adj):
     returned = self.first(x, adj)
@@ -98,27 +97,25 @@ class GAT(nn.Module):
     return returned
 
 model = GAT(dataset.num_features, 16, dataset.num_classes)
-criterion = torch.nn.CrossEntropyLoss()  # Define loss criterion.
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)  # Define optimizer.
+criterion = torch.nn.CrossEntropyLoss() 
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
 def train_gat():
     model.train()
-    optimizer.zero_grad()  # Clear gradients.
-    # out = model(data.x, data.edge_index)  # Perform a single forward pass.
-    out = model(data.x, adjacency_matrix)  # Perform a single forward pass.
-    loss = criterion(out[data.train_mask], data.y[data.train_mask])  # Compute the loss solely based on the training nodes.
-    loss.backward()  # Derive gradients.
-    optimizer.step()  # Update parameters based on gradients.
+    optimizer.zero_grad() 
+    out = model(data.x, adjacency_matrix) 
+    loss = criterion(out[data.train_mask], data.y[data.train_mask]) 
+    loss.backward() 
+    optimizer.step() 
     return loss
 
 def test_gat():
     model = GAT(dataset.num_features, 16, dataset.num_classes)
     model.load_state_dict("model.pt")
     model.eval()
-    # out = model(data.x, data.edge_index)
     out = model(data.x, adjacency_matrix)
-    pred = out.argmax(dim=1)  # Use the class with highest probability.
-    test_correct = pred[data.test_mask] == data.y[data.test_mask]  # Check against ground-truth labels.
-    test_acc = int(test_correct.sum()) / int(data.test_mask.sum())  # Derive ratio of correct predictions.
+    pred = out.argmax(dim=1) 
+    test_correct = pred[data.test_mask] == data.y[data.test_mask] 
+    test_acc = int(test_correct.sum()) / int(data.test_mask.sum()) 
     return test_acc
 
 from IPython.display import Javascript  # Restrict height of output cell.

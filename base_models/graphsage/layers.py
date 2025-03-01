@@ -14,7 +14,7 @@ class GraphSageLayer(GraphConvolution):
     def forward(self, input, adjacency):
         aggregated_features = self.aggregator(input, adjacency)
         concatenated = torch.concatenate(input, aggregated_features, dim=-1)
-        output = torch.matmul(self.weights, concatenated)
+        output = torch.softmax(torch.matmul(self.weights, concatenated))
         if self.bias:
             return torch.norm(output + self.bias)
         return torch.norm(output)

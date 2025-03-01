@@ -6,7 +6,7 @@ import scipy
 def one_hot_encode_labels(labels):
     ''' one hot encoding of labels '''
     label_set = set(labels)
-    mapping = {label : np.identity(len(label_set))[index] for index, label in enumerate(label_set)}
+    mapping = {label : np.identity(len(label_set))[:,index] for index, label in enumerate(label_set)}
     labes_encoded = list(map(mapping.get, labels))
 
     return labes_encoded
