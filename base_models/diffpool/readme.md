@@ -15,6 +15,6 @@ are useful for graph classification, as well to extract node embeddings that are
 pooling.
 ```
 
-![alt text](diffpool.png)
+![alt text](diffpoll.png)
 
 paper: https://arxiv.org/pdf/1806.08804
