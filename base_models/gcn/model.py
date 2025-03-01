@@ -1,5 +1,5 @@
 import torch
-from layers import GraphConvolution
+from base_models.gcn.layers import GraphConvolution
 
 
 class ConvolutionalGraphNetwork(torch.nn.Module):

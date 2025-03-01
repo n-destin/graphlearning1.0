@@ -1,25 +1,29 @@
 import torch
 from torch import optim
 import argparse
-from model import ConvolutionalGraphNetwork
+from base_models.gcn.model import ConvolutionalGraphNetwork
 from data.dataload import load_data, validation
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--learning_rate', type=float, default=0.01, help="Learning Rate")
-parser.add_argument('--hidden_dimension', type=int, default=16, help="dimension of the hidden features")
-parser.add_argument('--number_of_classes', type=int, default=7, help='number of classes')
-parser.add_argument('--weight_decay', type=float, default=5e-4, help="weight decay")
-parser.add_argument('--seed', type=int, default=42, help='Random seed.')
-parser.add_argument('--epochs', type=int, default=200,help='Number of epochs to train.')
-parser.add_argument('--no-cuda', action='store_true', default=False,help='Disables CUDA training.')
-parser.add_argument('--fastmode', default=False, help="evaluate while training")
 
+def create_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--learning_rate', type=float, default=0.01, help="Learning Rate")
+    parser.add_argument('--hidden_dimension', type=int, default=16, help="dimension of the hidden features")
+    parser.add_argument('--number_of_classes', type=int, default=7, help='number of classes')
+    parser.add_argument('--weight_decay', type=float, default=5e-4, help="weight decay")
+    parser.add_argument('--seed', type=int, default=42, help='Random seed.')
+    parser.add_argument('--epochs', type=int, default=200,help='Number of epochs to train.')
+    parser.add_argument('--no-cuda', action='store_true', default=False,help='Disables CUDA training.')
+    parser.add_argument('--fastmode', default=False, help="evaluate while training")
+
+    return parser
+
+parser = create_parser()
 arguments = parser.parse_args()
 arguments.cuda = not arguments.no_cuda and torch.cuda.is_available()
 
 normalized_adjacency, features, labels, train_indices, validate_indices, test_indices = load_data('.data/dataset', 'cora')
 model = ConvolutionalGraphNetwork(labels.shape[1], arguments.hidden_dimension, arguments.number_of_classes, 2)
-
 
 
 if arguments.cuda:

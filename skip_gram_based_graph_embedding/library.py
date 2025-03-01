@@ -1,6 +1,6 @@
 from collections import defaultdict
 import random
-from embedding.testing_graphs import graph_test_one
+from skip_gram_based_graph_embedding.testing_graphs import graph_test_one
 import math
 import torch
 from torch import nn
