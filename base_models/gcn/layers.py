@@ -15,15 +15,15 @@ class GraphConvolution(torch.nn.Module):
 
     def initialize_parameters(self):
         '''Xavier initialization'''
-        dev = 1/math.sqrt(self.output_dimension)
-        self.weights.data.uniform_(-dev, dev)
+        torch.nn.init.xavier_uniform(self.weights, gain=1.414)
         if self.bias:
-            self.bias.data.uniform_(-dev, dev)
+            torch.nn.init.xavier_uniform(self.bias, gain=1.414)
 
     
     def forward(self, inputs, normalized_adjacency):
-        before = torch.matmul(inputs, self.weights)
-        returning = torch.spmm(before, normalized_adjacency)
+        # print(self.weights.shape, inputs.shape)
+        before = torch.matmul(inputs, self.weights) # ()
+        returning = torch.spmm(normalized_adjacency, before)
         if self.bias:
             returning += self.bias
-        return torch.nn.functional.softmax(returning)
+        return torch.nn.functional.relu(returning)

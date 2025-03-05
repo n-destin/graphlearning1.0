@@ -1,5 +1,5 @@
 import torch
-from base_models.gcn.layers import GraphConvolution
+from layers import GraphConvolution
 
 
 class ConvolutionalGraphNetwork(torch.nn.Module):
@@ -14,15 +14,18 @@ class ConvolutionalGraphNetwork(torch.nn.Module):
         self.layers = torch.nn.ModuleList()
         for _ in range(n_layers):
             self.layers.append(GraphConvolution(self.hidden_dimension, self.hidden_dimension))
+        
         self.gcn1 = GraphConvolution(self.input_dimension, self.hidden_dimension)
         self.gcn2 = GraphConvolution(self.hidden_dimension, self.outpu_dimension)
         self.dropout_layer = torch.nn.Dropout(p = self.dropout)
 
     def forward(self, input, normalized_adjacency):
 
+        # print(input.shape, normalized_adjacency.shape)
+
         input = self.dropout_layer(input)
-        support = self.gcn1(input, normalized_adjacency)
+        support = torch.nn.functional.relu(self.gcn1(input, normalized_adjacency))
         for layer in self.layers:
-            support = self.layer(support, normalized_adjacency)
+            support = layer(support, normalized_adjacency)
         output = self.gcn2(support, normalized_adjacency)
-        return output
+        return torch.nn.functional.softmax(output), support
