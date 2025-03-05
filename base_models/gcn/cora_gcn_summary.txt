@@ -3,14 +3,14 @@
             Epochs :        200
             Dataset:        cora
             ------------ Best epoch -----------
-            Train:          0.5640000104904175
-            Test:           0.5459688901901245
-            Best epoch:     181
+            Train:          0.6610000133514404
+            Test:           0.591230571269989
+            Best epoch:     167
             ------------ Last epoch ------------
             Train:          None
             Test:           None
             ----------- Validation -------------
-            Validation :    0.5765765905380249
+            Validation :    0.6016016006469727
             -------------------------------
 
             Arguments:

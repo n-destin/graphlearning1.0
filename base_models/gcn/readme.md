@@ -11,4 +11,5 @@ Note: The original paper implements GCN using ReLU as the activation function. T
 
 Output Embeddings File:
 
+Contains Embeddings of 100 nodes
 Content on line i in the cora_gcn_embeddings.txt correcpond to the embedding of the node with id i. values have only four floating points.

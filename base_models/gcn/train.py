@@ -98,7 +98,7 @@ def test():
     accuracy = validation(output[validate_indices], labels[validate_indices])
 
     write_summary(summary_pathname, [arguments.epochs, "cora", best_train, best_test, best_epoch_num, last_train, last_test, accuracy, arguments_string])
-    np.savetxt(embeddings_pathname, embeddings_[:5, :].detach().numpy(), fmt="%.4f")
+    np.savetxt(embeddings_pathname, embeddings_[:100, :].detach().numpy(), fmt="%.4f")
 
 
 
