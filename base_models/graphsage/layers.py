@@ -1,13 +1,13 @@
 import torch
 from torch import nn
-from gcn.model import GraphConvolution
-from utils import choose_pooling
+from base_models.gcn.model import GraphConvolution
+from base_models.graphsage.utils import choose_aggregator
 
 
 class GraphSageLayer(GraphConvolution):
     def __init__(self, dimension, bias, pooling_type):
         super().__init__(dimension, dimension, bias)
-        self.aggregator = choose_pooling(pooling_type)
+        self.aggregator = choose_aggregator(pooling_type)
         self.concat_linear = torch.nn.Linear(2*dimension, dimension)
         self.weights = torch.nn.Parameter(torch.FloatTensor(2*dimension, dimension))
 

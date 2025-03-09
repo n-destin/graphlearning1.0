@@ -1,8 +1,8 @@
 import torch
 from torch import nn
 import numpy as np
-from data.dataload import normalize
-from gcn.train import create_parser
+from base_models.data.datasets.data_utils import normalize
+from base_models.gcn.train import create_parser
 from model import GraphSage
 
 

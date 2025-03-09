@@ -90,18 +90,18 @@ class Dataset():
         return len(self.labels)
 
 
-def load_data(directory, data_name):
+def load_data(data_name):
     '''
     Returns a list of networkx graphs.
     '''
     
     # pathanmes
 
-    edges_pathname = os.path.join(script_dir, "{}/{}_A.txt".format(directory, data_name))
-    node_graph_pathname = os.path.join(script_dir, "{}/{}_graph_indicator.txt".format(directory, data_name))
-    node_labels_pathname = os.path.join(script_dir, "{}/{}_node_labels.txt".format(directory, data_name))
-    node_attributes_pathname =os.path.join(script_dir,  "{}/{}_node_attributes.txt".format(directory, data_name))
-    graph_labels_pathname =os.path.join(script_dir,  "{}/{}_graph_labels.txt".format(directory, data_name))
+    edges_pathname = os.path.join(script_dir, "{}_A.txt".format(data_name))
+    node_graph_pathname = os.path.join(script_dir, "{}_graph_indicator.txt".format(data_name))
+    node_labels_pathname = os.path.join(script_dir, "{}_node_labels.txt".format(data_name))
+    node_attributes_pathname =os.path.join(script_dir,  "{}_node_attributes.txt".format(data_name))
+    graph_labels_pathname =os.path.join(script_dir,  "{}_graph_labels.txt".format(data_name))
 
     # mappings
 
@@ -111,6 +111,9 @@ def load_data(directory, data_name):
     # node to graph mapping 
 
     node_index = 0
+
+    print(node_graph_pathname,"reached here")
+
     with open(node_graph_pathname, "r") as file:
         for line in file.readlines():
             node_graph[node_index] = int(line)
@@ -148,13 +151,14 @@ def load_data(directory, data_name):
         Graph = nx.from_edgelist(edges)
         relabeling_mapping = {node : index for index, node in enumerate(Graph.nodes())}
         graph_attributes = {node : feature for node, feature in node_attributes.items() if node in Graph.nodes()}
-        node_labels = {node : label for node, label in node_labels.items() if node in Graph.nodes()}
+        node_labels_mapping = {node : label for node, label in node_labels.items() if node in Graph.nodes()}
         nx.set_node_attributes(Graph, graph_attributes, "feature")
-        nx.set_node_attributes(Graph, node_labels, "label")
+        nx.set_node_attributes(Graph, node_labels_mapping, "label")
         Graph = nx.relabel_nodes(Graph, relabeling_mapping)
         graphs.append(Graph)
         
-    return graphs
+        
+    return graphs, node_labels, node_attributes, graph_labels
 
 def load_node_information(pathname, feature_type):
     node_features = []

@@ -1,0 +1,31 @@
+
+            ================= Result ============
+            Epochs :        200
+            Dataset:        cora
+            ------------ Best epoch -----------
+            Train:          0.4009999930858612
+            Test:           0.3224893808364868
+            Best epoch:     191
+            ------------ Last epoch ------------
+            Train:          0.1420000046491623
+            Test:           0.13719943165779114
+            ----------- Validation -------------
+            Validation :    None
+            -------------------------------
+
+            Arguments:
+            learning_rate : 0.01 
+			hidden_dimension : 16 
+			number_of_classes : 7 
+			weight_decay : 0.0005 
+			seed : 42 
+			epochs : 200 
+			no_cuda : False 
+			fastmode : False 
+			n_embedding_layers : 2 
+			n_prediction_layers : 2 
+			pred_hidden_dimension : 16 
+			embedding_dimension : 16 
+			cuda : False 
+			
+             

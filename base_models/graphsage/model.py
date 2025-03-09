@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from layers import GraphSageLayer
+from base_models.graphsage.layers import GraphSageLayer
 
 class GraphSage(nn.Module):
     def __init__(self, depth, dimension, pooling_type):
